@@ -16,15 +16,6 @@ import com.tutorialsninja.pages.RegisterPage;
 	private static final String PHONE = "0591234567";
 	private final String newEmail = "user" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + "@test.com";
 
-	@DataProvider
-	public Object[][] invalidRegisterData() {
-		return new Object[][] {
-			{"",     PASSWORD, PASSWORD,        true,  "First Name must be between 1 and 32 characters!"},
-			{"Test", PASSWORD, PASSWORD,        false, "You must agree to the Privacy Policy!"},
-			{"Test", PASSWORD, "Different@123", true,  "Password confirmation does not match password!"},
-			{"Test", "abc",    "abc",           true,  "Password must be between 4 and 20 characters!"}
-		};
-	}
 
 	@Test(priority = 1)
 	public void registerWithValidData() {
@@ -74,6 +65,14 @@ import com.tutorialsninja.pages.RegisterPage;
 		Assert.assertTrue(registerPage.isMessageShown(expectedMessage));
 		Reporter.log("pass", true);
 	}
-
+	@DataProvider
+	public Object[][] invalidRegisterData() {
+		return new Object[][] {
+			{"",     PASSWORD, PASSWORD,        true,  "First Name must be between 1 and 32 characters!"},
+			{"Test", PASSWORD, PASSWORD,        false, "You must agree to the Privacy Policy!"},
+			{"Test", PASSWORD, "Different@123", true,  "Password confirmation does not match password!"},
+			{"Test", "abc",    "abc",           true,  "Password must be between 4 and 20 characters!"}
+		};
+	}
 	
 }
