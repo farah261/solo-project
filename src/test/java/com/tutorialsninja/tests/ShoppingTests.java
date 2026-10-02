@@ -7,22 +7,30 @@ import org.testng.annotations.Test;
 
 import com.tutorialsninja.pages.ShoppingPage;
 
-
 public class ShoppingTests extends BaseTest {
 	private static final String VALID_EMAIL = "farahsheran2@gmail.com";
 	private static final String VALID_PASSWORD = "farah123";
 	private static final String PRODUCT = "iPhone";
 	private static final String SORT_OPTION = "Price (High > Low)";
-	private static final String OUT_OF_STOCK = "not available in the desired quantity or not in stock";
+	private static final String LARGE_QUANTITY = "9999999999";
+	private static final String NO_MATCH_KEYWORD = "zzzzzzzzzz";
 
 	
+	private static final String MY_ACCOUNT_TITLE = "My Account";
+	private static final String CART_TITLE = "Shopping Cart";
+
 	
+	private static final String ADDED_MSG = "You have added " + PRODUCT;
+	private static final String OUT_OF_STOCK_MSG = "not available in the desired quantity or not in stock";
+	private static final String NO_PRODUCT_MSG = "There is no product that matches the search criteria.";
+	private static final String LOGIN_ERROR_MSG = "No match for E-Mail Address and/or Password";
+
 	@Test(priority = 1)
 	public void loginWithValidData() {
 		ShoppingPage shoppingPage = new ShoppingPage(driver);
 		shoppingPage.login(VALID_EMAIL, VALID_PASSWORD);
 
-		Assert.assertTrue(shoppingPage.hasPageTitle("My Account"));
+		Assert.assertTrue(shoppingPage.hasPageTitle(MY_ACCOUNT_TITLE));
 		Reporter.log("pass", true);
 	}
 
@@ -41,22 +49,20 @@ public class ShoppingTests extends BaseTest {
 	public void addProductToCart() {
 		ShoppingPage shoppingPage = new ShoppingPage(driver);
 		shoppingPage.addFirstProductToCart();
-		Assert.assertTrue(shoppingPage.getSuccessMessage().contains("You have added " + PRODUCT));
+		Assert.assertTrue(shoppingPage.getSuccessMessage().contains(ADDED_MSG));
 
 		shoppingPage.openCart();
 		Assert.assertEquals(shoppingPage.getCartProductName(), PRODUCT);
 		Reporter.log("pass", true);
 	}
 
-	
-
 	@Test(priority = 4, dependsOnMethods = "addProductToCart")
 	public void checkoutWithOutOfStockProduct() {
 		ShoppingPage shoppingPage = new ShoppingPage(driver);
 		shoppingPage.goToCheckout();
 
-		Assert.assertTrue(shoppingPage.hasPageTitle("Shopping Cart"));
-		Assert.assertTrue(shoppingPage.getWarningMessage().contains(OUT_OF_STOCK));
+		Assert.assertTrue(shoppingPage.hasPageTitle(CART_TITLE));
+		Assert.assertTrue(shoppingPage.getWarningMessage().contains(OUT_OF_STOCK_MSG));
 		Reporter.log("pass", true);
 	}
 
@@ -64,10 +70,10 @@ public class ShoppingTests extends BaseTest {
 	public void updateQuantityToLargeNumber() {
 		ShoppingPage shoppingPage = new ShoppingPage(driver);
 		shoppingPage.openCart();
-		shoppingPage.updateQuantity("9999999999");
+		shoppingPage.updateQuantity(LARGE_QUANTITY);
 
 		Assert.assertEquals(shoppingPage.getCartProductName(), PRODUCT);
-		Assert.assertTrue(shoppingPage.getWarningMessage().contains(OUT_OF_STOCK));
+		Assert.assertTrue(shoppingPage.getWarningMessage().contains(OUT_OF_STOCK_MSG));
 		Reporter.log("pass", true);
 	}
 
@@ -92,9 +98,9 @@ public class ShoppingTests extends BaseTest {
 	@Test(priority = 7)
 	public void searchWithNoMatch() {
 		ShoppingPage shoppingPage = new ShoppingPage(driver);
-		shoppingPage.searchFor("zzzzzzzzzz");
+		shoppingPage.searchFor(NO_MATCH_KEYWORD);
 
-		Assert.assertTrue(shoppingPage.isMessageShown("There is no product that matches the search criteria."));
+		Assert.assertTrue(shoppingPage.isMessageShown(NO_PRODUCT_MSG));
 		Reporter.log("pass", true);
 	}
 
@@ -104,7 +110,7 @@ public class ShoppingTests extends BaseTest {
 		shoppingPage.logout();
 		shoppingPage.login(email, password);
 
-		Assert.assertTrue(shoppingPage.getWarningMessage().contains("No match for E-Mail Address and/or Password"));
+		Assert.assertTrue(shoppingPage.getWarningMessage().contains(LOGIN_ERROR_MSG));
 		Reporter.log("pass", true);
 	}
 
