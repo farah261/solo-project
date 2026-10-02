@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="TutorialsNinja Suite">
+	<test name="Workflow 1 - Shopping">
+		<classes>
+			<class name="com.tutorialsninja.tests.ShoppingTests" />
+		</classes>
+	</test>
+	<test name="Workflow 2 - Register">
+		<classes>
+			<class name="com.tutorialsninja.tests.RegisterTests" />
+		</classes>
+	</test>
+</suite>
